@@ -73,14 +73,24 @@
       // })
     }
 
-    run() {
-
+    waiting() {
+			let w=document.createElement('div')
+	    let img=new Image
+	    w.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.24);z-index:9999'
+	    img.src='./onloadMaterial.gif'
+	    img.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)'
+	    w.appendChild(img)
+	    return w
     }
 
     //控制函数，链接渲染、生成图片和创建响应的函数。返回一个被选中的像素点颜色
     controller() {
+			let onload=this.waiting()
+	    document.body.appendChild(onload)
 
       return this.createImage().then(function (can) {
+	      onload.remove()
+
         this.createSeeColorContainer(can.canvas);
         let canvas = can.canvas,
           width = canvas.width,
@@ -192,7 +202,7 @@
       return new Promise((resolve, reject) => {
         let c = document.createElement('canvas');
         canvg(c, this.svg, {
-          log: true, ignoreMouse: true, renderCallback: e => {
+          log: true, ignoreMouse: true, useCORS: true, renderCallback: e => {
             let ctx = c.getContext('2d');
             let imgData = ctx.getImageData(0, 0, this.option.width, this.option.height).data;
             console.log(imgData)
@@ -214,14 +224,16 @@
       container.style.width = '100%'
       container.style.height = '100%'
       container.style.position = "fixed";
-      container.style.zIndex = "999";
+      container.style.zIndex = "15000";
       container.style.top = "0";
       container.style.left = "0";
+      container.style.boxSizing = "content-box";
       container.style.backgroundColor = "rgba(0,0,0,.6)";
       container.appendChild(canvas);
       canvas.style.position = "absolute";
       canvas.classList.add('seeColors-temp-canvas');
       canvas.style.zIndex = "1000";
+      canvas.style.boxSizing = "content-box";
       this.$("body").appendChild(container);
       console.log((container.offsetHeight - this.option.height) / 2)
       canvas.style.left = (container.offsetWidth - this.option.width) / 2 + 'px';
@@ -241,6 +253,7 @@
         cooky.style.height = "122px";
         cooky.style.borderRadius = "61px";
         cooky.style.overflow = "hidden";
+        cooky.style.boxSizing = "content-box";
 
         for (let i = 0; i < 121; i++) {
 
@@ -250,6 +263,7 @@
           cc.style.borderLeft = "1px #ccc solid";
           cc.style.borderTop = "1px #ccc solid";
           cc.style.float = "left";
+          cc.style.boxSizing = "content-box";
           cooky.appendChild(cc);
 
         }
@@ -262,9 +276,11 @@
         this.$('.seeColors-follow-cooky > div:nth-child(72)').style.borderTop = "1px red solid";
         this.$('.seeColors-follow-cooky').style.transition = "all 0 linear";
         this.$('.seeColors-follow-cooky > div').style.transition = "all 0.1s linear";
+        this.$('.seeColors-follow-cooky > div').style.boxSizing = "content-box";
 
       } else {
         this.$('.seeColors-follow-cooky').style.display = "block";
+        this.$('.seeColors-follow-cooky > div').style.boxSizing = "content-box";
 
       }
     }
